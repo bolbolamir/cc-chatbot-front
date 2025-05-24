@@ -13,36 +13,42 @@ export default function ChatInterface() {
   const ws = useRef<WebSocket | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [isConnected, setIsConnected] = useState(false)
+  const [isConnecting, setIsConnecting] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const connectWebSocket = () => {
+      setIsConnecting(true)
       ws.current = new WebSocket("ws://localhost:8001/chat")
 
       ws.current.onopen = () => {
         setIsConnected(true)
+        setIsConnecting(false)
         setError(null)
       }
 
       ws.current.onclose = () => {
         setIsConnected(false)
+        setIsConnecting(false)
       }
 
       ws.current.onerror = (err) => {
         setError(`اتصال با مشکل مواجه شد`)
         setIsConnected(false)
+        setIsConnecting(false)
       }
 
       ws.current.onmessage = (event) => {
         const message: Message = {
           id: Date.now().toString(),
           content: event.data,
-          sender: "assistant",
+          sender: "bot",
           timestamp: new Date().toISOString(),
         }
         setMessages((prev) => [...prev, message])
         setIsLoading(false)
+        setIsConnecting(false)
       }
     }
 
@@ -72,8 +78,8 @@ export default function ChatInterface() {
 
     setMessages((prev) => [...prev, newMessage])
     setIsLoading(true)
+    setIsConnecting(true)
 
-    // Send raw text instead of JSON
     ws.current.send(content)
   }
 
@@ -83,27 +89,37 @@ export default function ChatInterface() {
     }
     setError(null)
     setIsConnected(false)
+    setIsConnecting(true)
     const connectWebSocket = () => {
       ws.current = new WebSocket("ws://localhost:8001/chat")
-      // ...reattach event handlers...
+
       ws.current.onopen = () => {
         setIsConnected(true)
+        setIsConnecting(false)
         setError(null)
       }
-      ws.current.onclose = () => setIsConnected(false)
+
+      ws.current.onclose = () => {
+        setIsConnected(false)
+        setIsConnecting(false)
+      }
+
       ws.current.onerror = () => {
         setError(`اتصال با مشکل مواجه شد`)
         setIsConnected(false)
+        setIsConnecting(false)
       }
+
       ws.current.onmessage = (event) => {
         const message: Message = {
           id: Date.now().toString(),
           content: event.data,
-          sender: "assistant",
+          sender: "bot",
           timestamp: new Date().toISOString(),
         }
         setMessages((prev) => [...prev, message])
         setIsLoading(false)
+        setIsConnecting(false)
       }
     }
     connectWebSocket()
@@ -134,7 +150,7 @@ export default function ChatInterface() {
       </div>
 
       <div className="p-4 glass-effect">
-        <ConnectionStatus isConnected={isConnected} />
+        <ConnectionStatus isConnected={isConnected} isConnecting={isConnecting} />
         <ChatInput onSendMessage={sendMessage} disabled={!isConnected || isLoading} />
       </div>
     </motion.div>

@@ -30,7 +30,7 @@ export default function ChatInterface() {
 
       ws.current.onclose = () => {
         setIsConnected(false)
-        setIsConnecting(false)
+        setIsConnecting(true)
       }
 
       ws.current.onerror = (err) => {
@@ -131,26 +131,26 @@ export default function ChatInterface() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col h-full bg-background fun-pattern"
+      className="flex flex-col h-full bg-background fun-pattern border border-gray-200"
     >
       <ChatHeader isConnected={isConnected} />
 
       <div className="flex-1 overflow-hidden relative">
         <AnimatePresence>
-          {error && (
+          {error && !isConnecting && (
             <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }}>
               <ErrorDisplay error={error} onRetry={retryConnection} onDismiss={clearError} />
             </motion.div>
           )}
         </AnimatePresence>
 
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto border border-gray-100">
           <ChatMessages messages={messages} isLoading={isLoading} />
         </div>
       </div>
 
       <div className="p-4 glass-effect">
-        <ConnectionStatus isConnected={isConnected} isConnecting={isConnecting} />
+        {/* <ConnectionStatus isConnected={isConnected} isConnecting={isConnecting} /> */}
         <ChatInput onSendMessage={sendMessage} disabled={!isConnected || isLoading} />
       </div>
     </motion.div>

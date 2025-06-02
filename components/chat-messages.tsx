@@ -40,7 +40,7 @@ export default function ChatMessages({ messages, isLoading }: ChatMessagesProps)
   }
 
   return (
-    <div className="space-y-6 px-4 py-6">
+    <div className="space-y-2 px-4 py-2">
       <AnimatePresence initial={false}>
         {messages.map((message, index) => (
           <motion.div
@@ -56,7 +56,7 @@ export default function ChatMessages({ messages, isLoading }: ChatMessagesProps)
           >
             <div
               className={cn(
-                "max-w-[80%] message-bubble",
+                "max-w-[70%] message-bubble",
                 message.sender === "user" ? "message-bubble-user" : "message-bubble-bot",
               )}
             >

@@ -52,9 +52,9 @@ export default function ChatInput({ onSendMessage, disabled = false }: ChatInput
               ? "0 10px 25px -5px rgba(0, 209, 112, 0.3), 0 8px 10px -6px rgba(0, 209, 112, 0.2)"
               : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
           }}
-          className="flex items-end gap-2 bg-background rounded-3xl p-1 fun-shadow"
+          className="flex items-end border gap-2 bg-background rounded-3xl p-1 fun-shadow "
         >
-          <div className="flex gap-1 px-2">
+          <div className="flex gap-1 px-2 !self-center align-middle">
             <motion.button
               type="button"
               whileHover={{ scale: 1.1 }}
@@ -101,7 +101,7 @@ export default function ChatInput({ onSendMessage, disabled = false }: ChatInput
                   className="rounded-full w-9 h-9 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white shadow-lg shadow-green-500/30"
                   disabled={disabled || !message.trim()}
                 >
-                  <SendIcon className="h-5 w-5 rotate-180" />
+                  <SendIcon className="h-5 w-5" />
                 </Button>
               </motion.div>
             ) : (

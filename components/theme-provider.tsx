@@ -35,7 +35,9 @@ export function ThemeProvider({
   attribute = "data-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme)
+  const isBrowser = typeof window !== "undefined"
+
+  const [theme, setTheme] = useState<Theme>(() => (isBrowser ? (localStorage.getItem(storageKey) as Theme) : defaultTheme))
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -60,6 +62,12 @@ export function ThemeProvider({
       root.removeAttribute(attribute)
     }
   }, [theme, enableSystem, attribute])
+
+  useEffect(() => {
+    if (isBrowser) {
+      localStorage.setItem(storageKey, theme)
+    }
+  }, [theme])
 
   const value = {
     theme,

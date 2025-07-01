@@ -5,9 +5,10 @@ import type { Message } from "@/lib/types"
 import ChatHeader from "@/components/chat-header"
 import ChatMessages from "@/components/chat-messages"
 import ChatInput from "@/components/chat-input"
-import ConnectionStatus from "@/components/connection-status"
 import ErrorDisplay from "@/components/error-display"
 import { motion, AnimatePresence } from "framer-motion"
+
+const baseurl = "ws://localhost:8001/chat"
 
 export default function ChatInterface() {
   const ws = useRef<WebSocket | null>(null)
@@ -20,7 +21,7 @@ export default function ChatInterface() {
   useEffect(() => {
     const connectWebSocket = () => {
       setIsConnecting(true)
-      ws.current = new WebSocket("ws://localhost:8001/chat")
+      ws.current = new WebSocket(baseurl)
 
       ws.current.onopen = () => {
         setIsConnected(true)
@@ -91,7 +92,7 @@ export default function ChatInterface() {
     setIsConnected(false)
     setIsConnecting(true)
     const connectWebSocket = () => {
-      ws.current = new WebSocket("ws://localhost:8001/chat")
+      ws.current = new WebSocket(baseurl)
 
       ws.current.onopen = () => {
         setIsConnected(true)
